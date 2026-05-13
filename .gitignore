@@ -24,12 +24,21 @@ captures/
 *.log
 
 # Android/Google services configs (keep private if present)
-# google-services.json
+google-services.json
+**/google-services.json
 
 # Misc
 *.apk
 *.ap_ 
 *.aab
 *.hprof
-".dart_tool/" 
-"build/" 
+.dart_tool/
+build/
+.vscode/
+
+# Build logs and scratch
+build_error*.txt
+final_build*.txt
+direct_gradle_build.txt
+v*_definitive_gradle_build.txt
+scratch_nicedreamz/
