@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "487163171434",
+    "project_id": "nav-ai-122d9",
+    "storage_bucket": "nav-ai-122d9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:487163171434:android:79d74fcc2a561473d07013",
+        "android_client_info": {
+          "package_name": "com.navai.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxqUuVe4vw3gB886-Nfa6tcZbtWMe7C7c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

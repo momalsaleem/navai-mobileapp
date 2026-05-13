@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:nav_aif_fyp/services/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
@@ -8,12 +11,66 @@ import 'package:nav_aif_fyp/services/preferences_manager.dart';
 import 'package:nav_aif_fyp/services/voice_manager.dart';
 import 'package:nav_aif_fyp/services/route_tts_observer.dart';
 import 'package:nav_aif_fyp/pages/lang.dart';
+import 'package:android_intent_plus/android_intent.dart';
+import 'package:nav_aif_fyp/pages/page_four.dart';
+
+Future<void> _testFirebaseConnection() async {
+  try {
+    print('\n======================================================');
+    print('[FIREBASE TEST] 🚀 Starting automated Firebase test...');
+    DatabaseService db = DatabaseService();
+    
+    // 1. Add Test Data
+    print('[FIREBASE TEST] Adding test user...');
+    await db.addUser('test_user_999', {
+      'name': 'Automated Test Bot',
+      'platform': 'NavAI Flutter',
+      'timestamp': DateTime.now().toIso8601String()
+    });
+    
+    print('[FIREBASE TEST] Adding test route...');
+    await db.addRoute('test_route_999', {
+      'name': 'Virtual Run',
+      'waypoints': {
+        'wpt_1': {'lat': 31.5204, 'lng': 74.3587},
+      }
+    });
+
+    print('[FIREBASE TEST] Adding test recording...');
+    await db.saveRecording('test_record_999', {
+      'routeId': 'test_route_999',
+      'duration': 60,
+    });
+    
+    // 2. Try Calling (Reading) Data back
+    print('[FIREBASE TEST] Fetching all routes back from Firebase...');
+    final routes = await db.getAllRoutes();
+    print('[FIREBASE TEST] 🎯 Success! Data successfully retrieved.');
+    print('[FIREBASE TEST] Total Routes Found: ${routes?.length ?? 0}');
+    print('[FIREBASE TEST] Sample Output Array: ${routes?.keys.take(3)}');
+    print('======================================================\n');
+  } catch(e) {
+    print('\n[FIREBASE TEST ERROR] ❌ Connection failed: $e\n');
+  }
+}
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await PreferencesManager.init();
-  await Lang.init();
-  runApp(const NavAIApp());
+  runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    
+    // We await Firebase initialization but DO NOT run the heavy test immediately
+    await Firebase.initializeApp();
+    
+    await PreferencesManager.init();
+    await Lang.init();
+    
+    // We can run the test call after a slight delay or once the app is ready
+    // _testFirebaseConnection(); 
+    
+    runApp(const NavAIApp());
+  }, (error, stack) {
+    debugPrint('🚨 Uncaught error: $error\n$stack');
+  });
 }
 
 class NavAIApp extends StatelessWidget {
@@ -39,7 +96,7 @@ class NavAIHomePage extends StatefulWidget {
 }
 
 class _NavAIHomePageState extends State<NavAIHomePage>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   late AnimationController _pathController;
   late AnimationController _starController;
   final FlutterTts _flutterTts = FlutterTts();
@@ -54,6 +111,7 @@ class _NavAIHomePageState extends State<NavAIHomePage>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _initAnimations();
     
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -61,7 +119,10 @@ class _NavAIHomePageState extends State<NavAIHomePage>
     });
   }
 
-  /// animations - Using EXACT animations from the second code
+
+
+
+
   void _initAnimations() {
     _pathController = AnimationController(
       vsync: this,
@@ -69,7 +130,7 @@ class _NavAIHomePageState extends State<NavAIHomePage>
     );
     _starController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 7000), // 7000ms as in second code
+      duration: const Duration(milliseconds: 7000),
     );
 
     _pathController.addStatusListener((status) {
@@ -80,7 +141,7 @@ class _NavAIHomePageState extends State<NavAIHomePage>
 
     _starController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        // Loop animation like in second code
+
         Future.delayed(const Duration(milliseconds: 500), () {
           if (mounted && _autoRedirectEnabled) {
             _pathController.reset();
@@ -94,18 +155,47 @@ class _NavAIHomePageState extends State<NavAIHomePage>
     _pathController.forward();
   }
 
-  /// voice system initialization
+
   Future<void> _initializeVoiceSystemSequentially() async {
     try {
+
+      final hasConfig = await PreferencesManager.hasLanguageConfigured();
+      
+      if (hasConfig) {
+        setState(() => _statusMessage = 'Loading your preferences...');
+        
+
+        await Lang.init();
+        
+
+        await _speakReturningUserIntro();
+        
+
+        if (mounted) {
+          // Add a small delay for TTS to definitely finish or be ready to stop
+          await Future.delayed(const Duration(milliseconds: 300));
+          if (!mounted) return;
+          
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const DashboardScreen()),
+          );
+        }
+        return;
+      }
+
+      await PreferencesManager.clearAll();
+      
       setState(() => _statusMessage = 'Initializing voice system...');
 
       await _initTTS();
-      
+
       setState(() {
         _isSpeaking = true;
         _statusMessage = 'Welcome to NavAI...';
       });
       
+
       await _speakBilingualIntroduction();
       
       setState(() {
@@ -114,15 +204,16 @@ class _NavAIHomePageState extends State<NavAIHomePage>
         _statusMessage = 'Redirecting to language selection...';
       });
 
-      // Redirect after introduction is complete
-      await Future.delayed(const Duration(milliseconds: 1000));
+      await Future.delayed(const Duration(milliseconds: 500));
+      
+
       _navigateToLang();
       
     } catch (e) {
-      debugPrint('❌ Voice system initialization error: $e');
+
       if (mounted) {
         setState(() => _statusMessage = 'System initializing...');
-        // Even on error, redirect after delay
+
         Future.delayed(const Duration(seconds: 3), () {
           if (mounted && _autoRedirectEnabled) {
             _navigateToLang();
@@ -132,13 +223,50 @@ class _NavAIHomePageState extends State<NavAIHomePage>
     }
   }
 
-  /// Initialize TTS with proper configuration
+
+
+
+  Future<void> _safeSpeak(String text) async {
+    if (!mounted) return;
+    setState(() => _isSpeaking = true);
+    try {
+      await _flutterTts.speak(text);
+
+    } catch (e) {
+
+      if (mounted) {
+        setState(() => _isSpeaking = false);
+      }
+    }
+  }
+
+  Future<void> _safeAwaitSpeakCompletion() async {
+    try {
+
+      final completer = Completer<void>();
+      
+      _flutterTts.setCompletionHandler(() {
+        if (!completer.isCompleted) {
+          completer.complete();
+        }
+      });
+      
+
+      await completer.future.timeout(const Duration(seconds: 30));
+    } on TimeoutException catch (_) {
+
+    } catch (e) {
+
+    }
+  }
+
+
   Future<void> _initTTS() async {
     await _flutterTts.setLanguage('en-US');
     await _flutterTts.setSpeechRate(0.5);
     await _flutterTts.setPitch(1.0);
     await _flutterTts.setVolume(1.0);
-    await _flutterTts.awaitSpeakCompletion(true);
+
 
     _flutterTts.setStartHandler(() {
       if (mounted) setState(() => _isSpeaking = true);
@@ -149,49 +277,70 @@ class _NavAIHomePageState extends State<NavAIHomePage>
     });
 
     _flutterTts.setErrorHandler((message) {
-      debugPrint('TTS Error: $message');
+
       if (mounted) setState(() => _isSpeaking = false);
     });
 
-    debugPrint('✅ TTS initialized');
+
   }
 
   Future<void> _speakBilingualIntroduction() async {
     try {
-      // === ENGLISH INTRODUCTION ===
+
       await _flutterTts.setLanguage('en-US');
-      await VoiceManager.safeSpeak(
-        _flutterTts,
-        'Hello! Welcome to Nav AI. AI Powered Indoor Guidance and Object Detection. '
-        'Smart navigation, designed for you.',
+      await _safeSpeak(
+        'Hello! Welcome to Nav AI. '
+        'This application is designed to help blind and visually impaired users navigate their surroundings. '
+        'We interpret the world for you using object detection and voice guidance. '
+        'Please wait a moment while we initialize the system for your first use. '
+        'We will shortly redirect you to choose your preferred language.',
       );
-      await VoiceManager.safeAwaitSpeakCompletion(_flutterTts);
+      await _safeAwaitSpeakCompletion();
       
-      // Pause between languages
       await Future.delayed(const Duration(milliseconds: 800));
 
-      // === URDU INTRODUCTION ===
+
       try {
         await _flutterTts.setLanguage('ur-PK');
-        await VoiceManager.safeSpeak(
-          _flutterTts,
-          'السلام علیکم! نیو اے آئی میں خوش آمدید۔ اے آئی سے چلنے والی انڈور رہنمائی اور چیزوں کی شناخت۔ '
-          'سمارٹ نیویگیشن، آپ کے لیے تیار کی گئی۔',
+        await _safeSpeak(
+          'السلام علیکم! نوے اے آئی میں خوش آمدید۔ '
+          'یہ ایپلی کیشن نابینا اور کمزور بصارت والے افراد کی مدد کے لیے بنائی گئی ہے۔ '
+          'ہم آپ کی رہنمائی کے لیے جدید ٹیکنالوجی استعمال کرتے ہیں۔ '
+          'براہ کرم انتظار کریں جب تک ہم آپ کے لیے سسٹم تیار کرتے ہیں۔ '
+          'ہم آپ کو جلد ہی زبان کے انتخاب کی سکرین پر لے جائیں گے۔',
         );
-        await VoiceManager.safeAwaitSpeakCompletion(_flutterTts);
+        await _safeAwaitSpeakCompletion();
       } catch (e) {
-        debugPrint('⚠ Urdu TTS not available, skipping: $e');
+
       }
 
-      debugPrint('✅ Bilingual introduction complete');
+
 
     } catch (e) {
-      debugPrint('❌ Error during introduction: $e');
+
+    }
+  }
+
+  Future<void> _speakReturningUserIntro() async {
+    try {
+      if (Lang.isUrdu) {
+        await _flutterTts.setLanguage('ur-PK');
+        await _safeSpeak(
+          'نوے اے آئی میں خوش آمدید۔ لیجئے آپ کا ڈیش بورڈ تیار ہے۔'
+        );
+      } else {
+        await _flutterTts.setLanguage('en-US');
+        await _safeSpeak(
+          'Welcome to Nav AI. Loading your dashboard.'
+        );
+      }
+      await _safeAwaitSpeakCompletion();
+    } catch (e) {
+
     }
   }
 
   Future<void> _navigateToLang() async {
-    // Disable auto-redirect to prevent multiple navigations
     _autoRedirectEnabled = false;
 
     try {
@@ -207,16 +356,27 @@ class _NavAIHomePageState extends State<NavAIHomePage>
     } catch (_) {}
 
     if (mounted) {
-      await Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => NavAILanguagePage()),
-      );
+      final hasConfig = await PreferencesManager.hasLanguageConfigured();
+      if (hasConfig) {
+
+        await Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const DashboardScreen()),
+        );
+      } else {
+
+        await Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => NavAILanguagePage()),
+        );
+      }
     }
   }
 
   @override
   void dispose() {
-    _autoRedirectEnabled = false; // Prevent any redirects during dispose
+    WidgetsBinding.instance.removeObserver(this);
+    _autoRedirectEnabled = false;
     try {
       _flutterTts.stop();
       VoiceManager.safeStopListening(_speech);
@@ -250,7 +410,7 @@ class _NavAIHomePageState extends State<NavAIHomePage>
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              // Animation container
+
                               SizedBox(
                                 height: 250,
                                 width: double.infinity,
@@ -290,7 +450,7 @@ class _NavAIHomePageState extends State<NavAIHomePage>
                               ),
                               const SizedBox(height: 20),
                               
-                              // Title
+
                               const Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 8),
                                 child: Text(
@@ -305,7 +465,7 @@ class _NavAIHomePageState extends State<NavAIHomePage>
                               ),
                               const SizedBox(height: 10),
                               
-                              // Subtitle
+
                               const Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 8),
                                 child: Text(
@@ -319,14 +479,14 @@ class _NavAIHomePageState extends State<NavAIHomePage>
                               ),
                               const SizedBox(height: 30),
                               
-                              // Loading indicator
+
                               const CircularProgressIndicator(
                                 valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF2563eb)),
                                 strokeWidth: 3,
                               ),
                               const SizedBox(height: 20),
                               
-                              // Status message
+
                               Padding(
                                 padding: const EdgeInsets.only(top: 10),
                                 child: Column(
@@ -415,7 +575,6 @@ class _NavAIHomePageState extends State<NavAIHomePage>
   }
 }
 
-// PathAnimationPainter - EXACT COPY from second code
 class PathAnimationPainter extends CustomPainter {
   final Animation<double> pathAnimation;
   final Animation<double> starAnimation;
@@ -534,7 +693,7 @@ class PathAnimationPainter extends CustomPainter {
         double starSize = 40 + 10 * math.sin(math.pi * starAnimation.value);
         double opacity = 1.0;
 
-        // EXACT opacity calculations from second code (using 7.0 denominator)
+
         const double invisibleFracStart = 0.2 / 7.0;
         const double invisibleFracEnd = 0.5 / 7.0;
         if (starAnimation.value < invisibleFracStart) {

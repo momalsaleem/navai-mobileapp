@@ -1,0 +1,28 @@
+<!-- 
+  AndroidManifest.xml Permissions for NavAI Camera Preview
+  
+  Add these permissions inside the <manifest> tag in:
+  android/app/src/main/AndroidManifest.xml
+-->
+
+<!-- Camera permission (required) -->
+<uses-permission android:name="android.permission.CAMERA" />
+
+<!-- Microphone permission (optional, for future voice commands) -->
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+<!-- 
+  For Android 13+ (API 33+), these permissions are automatically handled
+  by the permission_handler package at runtime.
+  
+  No additional <uses-permission> tags are needed for Android 13+
+  as the camera and microphone permissions are runtime permissions.
+-->
+
+<!-- Camera feature declaration (optional but recommended) -->
+<uses-feature 
+    android:name="android.hardware.camera" 
+    android:required="false" />
+<uses-feature 
+    android:name="android.hardware.camera.autofocus" 
+    android:required="false" />

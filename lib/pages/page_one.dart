@@ -14,7 +14,8 @@ class NameInputPage extends StatefulWidget {
   State<NameInputPage> createState() => _NameInputPageState();
 }
 
-class _NameInputPageState extends State<NameInputPage> with RouteAwareTtsStopper {
+class _NameInputPageState extends State<NameInputPage>
+    with RouteAwareTtsStopper {
   final FlutterTts _tts = FlutterTts();
   final stt.SpeechToText _speech = stt.SpeechToText();
   final TextEditingController _nameController = TextEditingController();
@@ -33,7 +34,6 @@ class _NameInputPageState extends State<NameInputPage> with RouteAwareTtsStopper
     final isVoiceModeEnabled = await PreferencesManager.isVoiceModeEnabled();
     await _initTTS();
 
-    // Only speak and listen if voice mode is enabled
     if (isVoiceModeEnabled) {
       await _speakInstruction();
       await _startListening();
@@ -76,7 +76,8 @@ class _NameInputPageState extends State<NameInputPage> with RouteAwareTtsStopper
         _speech,
         localeId: Lang.speechLocaleId,
         onResult: (result) {
-          String recognized = (result.recognizedWords ?? '').toString().toLowerCase().trim();
+          String recognized =
+              (result.recognizedWords ?? '').toString().toLowerCase().trim();
           if (recognized.isNotEmpty) {
             _processCommand(recognized);
           }
@@ -89,30 +90,29 @@ class _NameInputPageState extends State<NameInputPage> with RouteAwareTtsStopper
 
   void _processCommand(String recognized) async {
     debugPrint("🎙 Name Input Recognized: $recognized");
-    
-    // If user says their name, set it in the text field and navigate
-    if (recognized.isNotEmpty && 
-        !recognized.contains('continue') && 
+
+    if (recognized.isNotEmpty &&
+        !recognized.contains('continue') &&
         !recognized.contains('next') &&
         recognized.length > 1) {
       await VoiceManager.safeStopListening(_speech);
       setState(() {
         _isListening = false;
-        _nameController.text = recognized; // Set the recognized name
+        _nameController.text = recognized;
       });
-      
+
       final isVoiceModeEnabled = await PreferencesManager.isVoiceModeEnabled();
       if (isVoiceModeEnabled) {
         await _initTTS();
-        await VoiceManager.safeSpeak(_tts, 'Hello $recognized. ${Lang.t('continue')}.');
+        await VoiceManager.safeSpeak(
+            _tts, 'Hello $recognized. ${Lang.t('continue')}.');
         await VoiceManager.safeAwaitSpeakCompletion(_tts);
       }
-      
+
       Future.delayed(const Duration(milliseconds: 500), () {
         _navigateToNext();
       });
     } else if (recognized.isNotEmpty && recognized.length > 2) {
-      // Command not recognized, ask to repeat
       await _askToRepeat();
     }
   }
@@ -127,7 +127,6 @@ class _NameInputPageState extends State<NameInputPage> with RouteAwareTtsStopper
   }
 
   Future<void> _navigateToNext() async {
-    // Stop any speaking/listening before navigating away
     try {
       await VoiceManager.safeStopListening(_speech);
     } catch (_) {}
@@ -255,7 +254,9 @@ class _NameInputPageState extends State<NameInputPage> with RouteAwareTtsStopper
                           },
                           icon: Icon(
                             _isListening ? Icons.mic : Icons.mic_none,
-                            color: _isListening ? Colors.red : const Color(0xFF9DA4B9),
+                            color: _isListening
+                                ? Colors.red
+                                : const Color(0xFF9DA4B9),
                             size: 28,
                           ),
                         ),
@@ -263,10 +264,10 @@ class _NameInputPageState extends State<NameInputPage> with RouteAwareTtsStopper
                     ],
                   ),
                   const SizedBox(height: 16),
-                  // Voice input indicator
                   if (_isListening)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
                         color: Colors.red.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(20),

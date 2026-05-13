@@ -7,6 +7,8 @@ import 'package:nav_aif_fyp/utils/lang.dart';
 import 'package:nav_aif_fyp/services/voice_manager.dart';
 import 'package:nav_aif_fyp/services/route_tts_observer.dart';
 import 'package:nav_aif_fyp/pages/page_four.dart';
+import 'package:nav_aif_fyp/services/microphone_manager.dart';
+import 'package:android_intent_plus/android_intent.dart';
 
 export 'package:nav_aif_fyp/utils/lang.dart';
 
@@ -27,151 +29,201 @@ class LanguageSelectionScreen extends StatefulWidget {
       _LanguageSelectionScreenState();
 }
 
-class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> with RouteAwareTtsStopper {
+class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
+    with RouteAwareTtsStopper {
   final FlutterTts flutterTts = FlutterTts();
   final stt.SpeechToText _speech = stt.SpeechToText();
 
-  String selectedLanguage = ""; // Start with no selection
+  String selectedLanguage = "";
   bool _isListening = false;
   bool _isSpeaking = false;
   bool _isNavigating = false;
   String _statusMessage = 'Initializing...';
+  bool _pageHasSpoken = false;
 
   @override
   void initState() {
     super.initState();
-    _initializeLanguagePage();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeLanguagePage();
+    });
   }
 
-  /// Initialize language page with voice system
   Future<void> _initializeLanguagePage() async {
-    await _loadPreferences();
-    await _initTTS();
-    
-    // Check if voice mode is enabled
-    final isVoiceModeEnabled = await PreferencesManager.isVoiceModeEnabled();
-    
-    if (isVoiceModeEnabled) {
-      // Read the page content in both languages
-      await _readPageContentBilingual();
-      // Start listening after reading
-      await _startListening();
-    } else {
-      // Touch mode - just show status
-      setState(() => _statusMessage = 'Please select your preferred language.');
+    await _clearAllSpeechAndTts();
+
+    if (mounted) {
+      setState(() {
+        selectedLanguage = "";
+        _isListening = false;
+        _isSpeaking = false;
+        _isNavigating = false;
+        _pageHasSpoken = false;
+        _statusMessage = 'Initializing...';
+      });
     }
-  }
 
-  Future<void> _loadPreferences() async {
-    await Lang.init();
-    // Don't pre-select a language - let user choose
-    setState(() {
-      selectedLanguage = "";
-    });
-  }
-
-  Future<void> _initTTS() async {
-    await flutterTts.setLanguage('en-US');
-    await flutterTts.setSpeechRate(0.5);
-    await flutterTts.setPitch(1.0);
-    await flutterTts.awaitSpeakCompletion(true);
-
-    flutterTts.setStartHandler(() {
-      if (mounted) setState(() => _isSpeaking = true);
-    });
-
-    flutterTts.setCompletionHandler(() {
-      if (mounted) setState(() => _isSpeaking = false);
-    });
-
-    flutterTts.setErrorHandler((message) {
-      debugPrint('TTS Error: $message');
-      if (mounted) setState(() => _isSpeaking = false);
-    });
-  }
-
-  /// Read the page content in both English and Urdu
-  Future<void> _readPageContentBilingual() async {
     try {
+      setState(() => _statusMessage = 'Initializing voice system...');
+
+      await _initTTS();
+
       setState(() {
         _isSpeaking = true;
-        _statusMessage = 'Reading page content...';
+        _statusMessage = 'Reading language selection...';
       });
-      
-      // === ENGLISH PAGE CONTENT ===
-      await flutterTts.setLanguage('en-US');
-      await VoiceManager.safeSpeak(
-        flutterTts,
-        'Language Selection. Select Your Language. Please choose either English or Urdu to continue. '
-        'Say English for English interface, or Urdu for Urdu interface. '
-        'You can also tap the language buttons on screen. After selection, you will be automatically redirected to the dashboard.',
-      );
-      await VoiceManager.safeAwaitSpeakCompletion(flutterTts);
-      
-      // Pause between languages
-      await Future.delayed(const Duration(milliseconds: 800));
 
-      // === URDU PAGE CONTENT ===
-      try {
-        await flutterTts.setLanguage('ur-PK');
-        await VoiceManager.safeSpeak(
-          flutterTts,
-          'زبان کی منتخب۔ اپنی زبان منتخب کریں۔ براہ کرم جاری رکھنے کے لیے انگلش یا اردو میں سے ایک منتخب کریں۔ '
-          'انگریزی انٹرفیس کے لیے انگلش کہیں، یا اردو انٹرفیس کے لیے اردو کہیں۔ '
-          'آپ سکرین پر زبان کے بٹنز پر ٹیپ بھی کر سکتے ہیں۔ منتخب کے بعد، آپ خود بخود ڈیش بورڈ پر منتقل ہو جائیں گے۔',
-        );
-        await VoiceManager.safeAwaitSpeakCompletion(flutterTts);
-      } catch (e) {
-        debugPrint('⚠ Urdu TTS not available, skipping: $e');
-        // Fallback to English
-        await flutterTts.setLanguage('en-US');
-        await VoiceManager.safeSpeak(
-          flutterTts,
-          'Language selection page. Please select English or Urdu to continue.',
-        );
-        await VoiceManager.safeAwaitSpeakCompletion(flutterTts);
-      }
+      await Future.delayed(const Duration(milliseconds: 300));
+      await _speakBilingualIntroduction();
+
+      _pageHasSpoken = true;
 
       setState(() {
         _isSpeaking = false;
         _statusMessage = 'Listening... Say "English" or "Urdu" to select';
       });
 
-      debugPrint('✅ Page content read in both languages');
+      try {
+        await _speech.stop();
+        await _speech.cancel();
+      } catch (_) {}
+
+      await Future.delayed(const Duration(milliseconds: 200));
+
+      await _startListening();
     } catch (e) {
-      debugPrint('❌ Error reading page content: $e');
-      setState(() {
-        _isSpeaking = false;
-        _statusMessage = 'Please select your language to continue.';
-      });
+      if (mounted) {
+        setState(() => _statusMessage = 'Please select your language.');
+      }
     }
   }
 
-  /// Start listening for language selection
+  Future<void> _clearAllSpeechAndTts() async {
+    try {
+      await _speech.stop();
+      await _speech.cancel();
+      await _speech.initialize(); // Re-initialize to clear state
+    } catch (e) {}
+
+    try {
+      await flutterTts.stop();
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      await flutterTts.speak("");
+      await flutterTts.stop();
+    } catch (e) {}
+  }
+
+  Future<void> _initTTS() async {
+    try {
+      await flutterTts.setLanguage('en-US');
+      await flutterTts.setSpeechRate(0.5);
+      await flutterTts.setVolume(1.0);
+      await flutterTts.setPitch(1.0);
+      await flutterTts.awaitSpeakCompletion(true);
+
+      flutterTts.setStartHandler(() {
+        if (mounted) setState(() => _isSpeaking = true);
+      });
+
+      flutterTts.setCompletionHandler(() {
+        if (mounted) setState(() => _isSpeaking = false);
+      });
+
+      flutterTts.setErrorHandler((message) {
+        if (mounted) setState(() => _isSpeaking = false);
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> _speakBilingualIntroduction() async {
+    try {
+      await flutterTts.stop();
+      await Future.delayed(const Duration(milliseconds: 200));
+
+      await flutterTts.setLanguage('en-US');
+      await flutterTts.speak('Welcome to language selection. '
+          'Please select your preferred language. '
+          'Say English for English interface, or Urdu for Urdu interface. '
+          'You can also tap the language buttons on screen.');
+      await flutterTts.awaitSpeakCompletion(true);
+
+      await Future.delayed(const Duration(milliseconds: 800));
+
+      try {
+        await flutterTts.setLanguage('ur-PK');
+        await flutterTts.speak('زبان کی منتخب میں خوش آمدید۔ '
+            'براہ کرم اپنی پسندیدہ زبان منتخب کریں۔ '
+            'انگریزی انٹرفیس کے لیے انگلش کہیں، یا اردو انٹرفیس کے لیے اردو کہیں۔ '
+            'آپ سکرین پر زبان کے بٹنز پر ٹیپ بھی کر سکتے ہیں۔');
+        await flutterTts.awaitSpeakCompletion(true);
+      } catch (e) {}
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> _startListening() async {
-    // Only start listening if voice mode is enabled and no language is selected yet
-    final isVoiceModeEnabled = await PreferencesManager.isVoiceModeEnabled();
-    if (!isVoiceModeEnabled || selectedLanguage.isNotEmpty || _isNavigating) {
+    if (selectedLanguage.isNotEmpty || _isNavigating) {
+      return;
+    }
+
+    bool hasPerm = await MicrophoneManager.hasPermission();
+    if (!hasPerm) {
+      // Speak guidance in English (default for setup)
+      await flutterTts.setLanguage('en-US');
+      await flutterTts.speak(
+          "To hear you, we need microphone access. Please double tap Allow when the permission dialog appears.");
+      await flutterTts.awaitSpeakCompletion(true);
+    }
+
+    bool micReady = await MicrophoneManager.initializeMicrophone(
+      speech: _speech,
+      context: context,
+      onStatusUpdate: (message) {
+        if (mounted) {
+          setState(() => _statusMessage = message);
+        }
+      },
+      isUrdu: false, // Language page is bilingual
+    );
+
+    if (!micReady) {
+      if (mounted) setState(() => _isListening = false);
       return;
     }
 
     bool available = await _speech.initialize(
       onStatus: (val) {
-        debugPrint('🎙️ Speech status: $val');
-        if (val == "done" && !_isListening && mounted && !_isNavigating && selectedLanguage.isEmpty) {
-          // Restart listening after completion if no selection made
+        if (val == "done" &&
+            !_isListening &&
+            mounted &&
+            !_isNavigating &&
+            selectedLanguage.isEmpty) {
           Future.delayed(const Duration(milliseconds: 500), () {
-            if (mounted && !_isNavigating && selectedLanguage.isEmpty) _startListening();
+            if (mounted && !_isNavigating && selectedLanguage.isEmpty) {
+              _startListening();
+            }
           });
         }
       },
       onError: (val) {
-        debugPrint('🎙️ Speech Error: $val');
         if (mounted) {
           setState(() {
             _isListening = false;
-            _statusMessage = 'Listening error. Please use touch controls.';
+            _statusMessage = 'Retrying...';
           });
+
+          if (!_isNavigating && selectedLanguage.isEmpty) {
+            Future.delayed(const Duration(seconds: 1), () {
+              if (mounted && !_isNavigating && selectedLanguage.isEmpty) {
+                _startListening();
+              }
+            });
+          }
         }
       },
     );
@@ -183,148 +235,104 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> with 
           _statusMessage = 'Listening... Say "English" or "Urdu" to select';
         });
       }
-      
+
       await _speech.listen(
-        localeId: 'en-US',
+        // Rely on system default or auto-detect
+
         onResult: (result) {
           if (result.finalResult) {
             String recognized = result.recognizedWords.toLowerCase().trim();
+
             if (recognized.isNotEmpty) {
               _processCommand(recognized);
             }
           }
         },
-        listenFor: const Duration(seconds: 30),
-        pauseFor: const Duration(seconds: 5),
+
         partialResults: false,
       );
     } else if (!available) {
       if (mounted) {
         setState(() {
           _isListening = false;
-          _statusMessage = 'Microphone not available. Please use touch controls.';
+          _statusMessage = 'Please select language using buttons.';
         });
       }
     }
   }
 
-  /// Process language selection command in both English and Urdu
   void _processCommand(String recognized) async {
-    debugPrint("🎙 Language Page Recognized: $recognized");
-    
-    // Stop listening while processing
     await _speech.stop();
     if (mounted) setState(() => _isListening = false);
-    
-    bool commandMatched = false;
-    
-    // ========== ENGLISH COMMANDS ==========
-    if (recognized.contains('english') || 
+
+    if (recognized.contains('english') ||
         recognized.contains('inglish') ||
         recognized.contains('انگریزی') ||
         recognized == 'en' ||
-        recognized == 'english' ||
         recognized == 'angrezi' ||
+        recognized.contains('angrezi') ||
         recognized == 'انگلش') {
-      commandMatched = true;
       await _selectLanguageAndNavigate("English");
-    }
-    // ========== URDU COMMANDS ==========
-    else if (recognized.contains('urdu') || 
-             recognized.contains('اردو') ||
-             recognized.contains('urdu') ||
-             recognized == 'urdu' ||
-             recognized == 'اردو' ||
-             recognized.contains('اردو زبان') ||
-             recognized.contains('urdu language')) {
-      commandMatched = true;
+      return;
+    } else if (recognized.contains('urdu') ||
+        recognized.contains('اردو') ||
+        recognized == 'urdu' ||
+        recognized.contains('ordo') ||
+        recognized.contains('urdo') ||
+        recognized.contains('aurdo') ||
+        recognized.contains('اردو زبان') ||
+        recognized.contains('urdu language')) {
       await _selectLanguageAndNavigate("Urdu");
-    }
-    // ========== HELP/REPEAT COMMANDS ==========
-    else if (recognized.contains('help') ||
-             recognized.contains('مدد') ||
-             recognized.contains('repeat') ||
-             recognized.contains('دہرائیں') ||
-             recognized.contains('again') ||
-             recognized.contains('پھر کہیں') ||
-             recognized.contains('what are my options') ||
-             recognized.contains('کیا آپشنز ہیں')) {
-      commandMatched = true;
-      await _readPageContentBilingual(); // Read the page content again
-      // Resume listening after reading
-      if (mounted && !_isNavigating && selectedLanguage.isEmpty) await _startListening();
-    }
-    
-    // If command not recognized, ask to repeat in both languages
-    if (!commandMatched && recognized.length > 2 && !_isNavigating) {
-      await _askToRepeatBilingual();
-    } else if (!commandMatched && !_isNavigating) {
-      // Restart listening for short/empty commands
-      if (mounted && selectedLanguage.isEmpty) await _startListening();
-    }
-  }
-
-  /// Ask user to repeat in both English and Urdu
-  Future<void> _askToRepeatBilingual() async {
-    if (mounted) {
-      setState(() => _statusMessage = 'Command not understood. Please repeat.');
-    }
-    
-    // Haptic feedback for error
-    HapticFeedback.vibrate();
-
-    // Only speak if voice mode is enabled
-    final isVoiceModeEnabled = await PreferencesManager.isVoiceModeEnabled();
-    if (!isVoiceModeEnabled) {
-      if (mounted) {
-        setState(() => _statusMessage = 'Please select language using buttons.');
-      }
       return;
     }
 
-    // Speak in English
-    await flutterTts.setLanguage('en-US');
-    await VoiceManager.safeSpeak(
-      flutterTts,
-      "I didn't understand that. Please say: English or Urdu to select your language."
-    );
-    await VoiceManager.safeAwaitSpeakCompletion(flutterTts);
-
-    // Speak in Urdu
-    try {
-      await flutterTts.setLanguage('ur-PK');
-      await VoiceManager.safeSpeak(
-        flutterTts,
-        'میں سمجھا نہیں۔ براہ کرم کہیں: انگلش یا اردو اپنی زبان منتخب کرنے کے لیے۔'
-      );
-      await VoiceManager.safeAwaitSpeakCompletion(flutterTts);
-    } catch (e) {
-      debugPrint('⚠️ Urdu repeat message not available');
-    }
-
-    // Resume listening
-    if (mounted && !_isNavigating && selectedLanguage.isEmpty) await _startListening();
+    await _askToRepeat();
   }
 
-  /// Select language and automatically navigate to dashboard
+  Future<void> _askToRepeat() async {
+    if (mounted) {
+      setState(() => _statusMessage = 'Please say "English" or "Urdu"');
+    }
+
+    HapticFeedback.vibrate();
+
+    await flutterTts.setLanguage('en-US');
+    await flutterTts.speak(
+        "I didn't understand. Please say: English or Urdu to select your language.");
+    await flutterTts.awaitSpeakCompletion(true);
+
+    if (mounted && !_isNavigating && selectedLanguage.isEmpty) {
+      await _startListening();
+    }
+  }
+
   Future<void> _selectLanguageAndNavigate(String language) async {
-    if (_isNavigating) return; // Prevent multiple navigations
-    
+    if (_isNavigating) {
+      return;
+    }
+
     _isNavigating = true;
     await _speech.stop();
-    
+
     if (mounted) {
       setState(() {
         _isListening = false;
         selectedLanguage = language;
-        _statusMessage = '$language selected. Redirecting to dashboard...';
+        _statusMessage = '$language selected. Checking...';
       });
     }
 
-    // Haptic feedback for selection
     HapticFeedback.mediumImpact();
 
-    // Save language preference
+    if (language == "Urdu") {
+      final isUrduAvailable = await _checkUrduAvailability();
+
+      if (!isUrduAvailable) {
+        await _handleMissingUrdu();
+        return; // Stop here, user needs to install Urdu
+      }
+    }
+
     if (language == "Urdu") {
       await Lang.setLanguage('ur');
       await PreferencesManager.setLanguage('ur');
@@ -333,102 +341,113 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> with 
       await PreferencesManager.setLanguage('en');
     }
 
-    debugPrint('✅ Language selected: $language');
+    if (mounted) {
+      setState(() {
+        _statusMessage = '$language selected. Redirecting...';
+      });
+    }
 
-    // Speak confirmation in appropriate language
     await _speakSelectionConfirmation(language);
 
-    // Navigate to DashboardScreen after a short delay
-    Future.delayed(const Duration(seconds: 2)).then((_) {
-      if (mounted) {
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const DashboardScreen()),
-          (Route<dynamic> route) => false,
-        );
-      }
-    });
-  }
+    await Future.delayed(const Duration(seconds: 3));
 
-  /// Speak language selection confirmation in both languages
-  Future<void> _speakSelectionConfirmation(String language) async {
-    // Only speak if voice mode is enabled
-    final isVoiceModeEnabled = await PreferencesManager.isVoiceModeEnabled();
-    if (!isVoiceModeEnabled) return;
-
-    if (language == "Urdu") {
-      // Confirm in Urdu
-      try {
-        await flutterTts.setLanguage('ur-PK');
-        await VoiceManager.safeSpeak(
-          flutterTts,
-          'آپ نے اردو زبان کا انٹرفیس منتخب کیا۔ شکریہ۔ اب آپ کو ڈیش بورڈ پر منتقل کیا جا رہا ہے۔'
-        );
-        await VoiceManager.safeAwaitSpeakCompletion(flutterTts);
-        
-        // Also confirm in English for clarity
-        await Future.delayed(const Duration(milliseconds: 500));
-        await flutterTts.setLanguage('en-US');
-        await VoiceManager.safeSpeak(
-          flutterTts,
-          "You selected Urdu interface. Thank you. Now redirecting you to the dashboard."
-        );
-        await VoiceManager.safeAwaitSpeakCompletion(flutterTts);
-      } catch (e) {
-        debugPrint('⚠️ Urdu confirmation not available, using English only');
-        await flutterTts.setLanguage('en-US');
-        await VoiceManager.safeSpeak(
-          flutterTts,
-          "You selected Urdu language interface. Now redirecting to dashboard."
-        );
-        await VoiceManager.safeAwaitSpeakCompletion(flutterTts);
-      }
-    } else {
-      // Confirm in English
-      await flutterTts.setLanguage('en-US');
-      await VoiceManager.safeSpeak(
-        flutterTts,
-        "You selected English language interface. Thank you. Now redirecting you to the dashboard."
+    if (mounted) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const DashboardScreen()),
+        (Route<dynamic> route) => false,
       );
-      await VoiceManager.safeAwaitSpeakCompletion(flutterTts);
-      
-      // Also confirm in Urdu if possible
-      try {
-        await Future.delayed(const Duration(milliseconds: 500));
-        await flutterTts.setLanguage('ur-PK');
-        await VoiceManager.safeSpeak(
-          flutterTts,
-          'آپ نے انگلش زبان کا انٹرفیس منتخب کیا۔ شکریہ۔ اب آپ کو ڈیش بورڈ پر منتقل کیا جا رہا ہے۔'
-        );
-        await VoiceManager.safeAwaitSpeakCompletion(flutterTts);
-      } catch (e) {
-        debugPrint('⚠️ Urdu confirmation not available for English selection');
-      }
     }
   }
 
-  /// Manual language selection (touch mode) with auto-navigation
+  Future<void> _speakSelectionConfirmation(String language) async {
+    if (language == "Urdu") {
+      try {
+        await flutterTts.setLanguage('ur-PK');
+        await flutterTts.speak(
+            'آپ نے اردو زبان کا انٹرفیس منتخب کیا۔ شکریہ۔ اب آپ کو ڈیش بورڈ پر منتقل کیا جا رہا ہے۔');
+        await flutterTts.awaitSpeakCompletion(true);
+      } catch (e) {}
+    } else {
+      await flutterTts.setLanguage('en-US');
+      await flutterTts.speak(
+          "You selected English language interface. Thank you. Now redirecting you to the dashboard.");
+      await flutterTts.awaitSpeakCompletion(true);
+    }
+  }
+
+  Future<bool> _checkUrduAvailability() async {
+    try {
+      final isAvailable = await flutterTts.isLanguageAvailable("ur-PK");
+      return isAvailable == true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<void> _handleMissingUrdu() async {
+    if (mounted) {
+      setState(() {
+        _statusMessage = 'Urdu voice not installed. Opening settings...';
+        _isNavigating = false; // Reset navigation flag
+        selectedLanguage = ""; // Reset selection
+      });
+    }
+
+    await flutterTts.setLanguage('en-US');
+    await flutterTts.speak('Urdu voice is not installed on your device. '
+        'Opening installation screen. '
+        'Please tap install next to Urdu, then return to the app and select Urdu again.');
+    await flutterTts.awaitSpeakCompletion(true);
+
+    try {
+      final intent = AndroidIntent(
+        action: 'android.speech.tts.engine.INSTALL_TTS_DATA',
+      );
+      await intent.launch();
+    } catch (e) {
+      try {
+        final settingsIntent = AndroidIntent(
+          action: 'com.android.settings.TTS_SETTINGS',
+        );
+        await settingsIntent.launch();
+      } catch (e2) {
+        // Show error message
+        if (mounted) {
+          setState(() {
+            _statusMessage = 'Please install Urdu voice from device settings';
+          });
+        }
+      }
+    }
+
+    await Future.delayed(const Duration(seconds: 2));
+    if (mounted && !_isNavigating && selectedLanguage.isEmpty) {
+      await _startListening();
+    }
+  }
+
   Future<void> _onLanguageSelected(String language) async {
-    if (_isNavigating) return; // Prevent multiple navigations
-    
-    // Stop listening if active
+    if (_isNavigating) return;
+
     try {
       await _speech.stop();
     } catch (_) {}
-    
+
     if (mounted) {
       setState(() {
         _isListening = false;
         selectedLanguage = language;
       });
     }
-    
+
     await _selectLanguageAndNavigate(language);
   }
 
   Widget _buildLanguageOption(String language) {
     final bool isSelected = selectedLanguage == language;
-    final bool isDisabled = _isNavigating || (selectedLanguage.isNotEmpty && !isSelected);
-    
+    final bool isDisabled =
+        _isNavigating || (selectedLanguage.isNotEmpty && !isSelected);
+
     return GestureDetector(
       onTap: isDisabled ? null : () => _onLanguageSelected(language),
       child: Opacity(
@@ -437,12 +456,14 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> with 
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
             color: isSelected
-              ? const Color(0xFF1349EC).withAlpha((0.2 * 255).round())
-              : Colors.white.withAlpha((0.05 * 255).round()),
+                ? const Color(0xFF1349EC).withAlpha((0.2 * 255).round())
+                : Colors.white.withAlpha((0.05 * 255).round()),
             borderRadius: BorderRadius.circular(12),
             border: isSelected
                 ? Border.all(color: const Color(0xFF1349EC), width: 2)
-                : Border.all(color: Colors.white.withAlpha((0.1 * 255).round()), width: 1),
+                : Border.all(
+                    color: Colors.white.withAlpha((0.1 * 255).round()),
+                    width: 1),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -452,17 +473,19 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> with 
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: isDisabled 
-                    ? Colors.white.withAlpha((0.5 * 255).round())
-                    : Colors.white,
+                  color: isDisabled
+                      ? Colors.white.withAlpha((0.5 * 255).round())
+                      : Colors.white,
                 ),
               ),
               Radio<String>(
                 value: language,
                 groupValue: selectedLanguage,
-                onChanged: isDisabled ? null : (value) {
-                  if (value != null) _onLanguageSelected(value);
-                },
+                onChanged: isDisabled
+                    ? null
+                    : (value) {
+                        if (value != null) _onLanguageSelected(value);
+                      },
                 activeColor: const Color(0xFF1349EC),
               ),
             ],
@@ -483,7 +506,6 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> with 
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 children: [
-                  // No back button - user must select language
                   const SizedBox(width: 40),
                   Expanded(
                     child: Text(
@@ -506,7 +528,6 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> with 
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Welcome message (bilingual)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 30),
                       child: Column(
@@ -524,31 +545,14 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> with 
                             'اپنی زبان منتخب کریں',
                             style: TextStyle(
                               fontSize: 18,
-                              color: Colors.white.withAlpha((0.7 * 255).round()),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            'Select a language to automatically continue',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.white.withAlpha((0.6 * 255).round()),
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
-                          Text(
-                            'خود بخود جاری رکھنے کے لیے ایک زبان منتخب کریں',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.white.withAlpha((0.6 * 255).round()),
-                              fontStyle: FontStyle.italic,
+                              color:
+                                  Colors.white.withAlpha((0.7 * 255).round()),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    
-                    // Language options with bilingual labels
+
                     Column(
                       children: [
                         _buildLanguageOption("Urdu"),
@@ -557,74 +561,47 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> with 
                       ],
                     ),
                     const SizedBox(height: 30),
-                    
-                    // Selection status and loading indicator
-                    if (selectedLanguage.isNotEmpty && !_isNavigating)
+
+                    // Loading indicator when initializing
+                    if (_statusMessage.contains('Initializing') ||
+                        _statusMessage.contains('Reading'))
                       Column(
                         children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                            decoration: BoxDecoration(
-                              color: Colors.green.withAlpha((0.2 * 255).round()),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.green, width: 1),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.check_circle, color: Colors.green.withAlpha((0.9 * 255).round())),
-                                const SizedBox(width: 10),
-                                Text(
-                                  'Selected: $selectedLanguage',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.green.withAlpha((0.9 * 255).round()),
-                                  ),
-                                ),
-                              ],
-                            ),
+                          const CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Color(0xFF2563eb)),
                           ),
                           const SizedBox(height: 20),
-                          const CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF1349EC)),
-                          ),
-                          const SizedBox(height: 10),
                           Text(
-                            'Redirecting to dashboard...',
-                            style: TextStyle(
+                            _statusMessage,
+                            style: const TextStyle(
                               fontSize: 14,
-                              color: Colors.white.withAlpha((0.7 * 255).round()),
+                              color: Color(0xFF9DA4B9),
                             ),
-                          ),
-                          Text(
-                            'ڈیش بورڈ پر منتقل ہو رہا ہے...',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.white.withAlpha((0.7 * 255).round()),
-                            ),
+                            textAlign: TextAlign.center,
                           ),
                         ],
                       ),
-                    
-                    const SizedBox(height: 20),
-                    
-                    // Voice mode status indicators
+
+                    // Status indicators
                     if (_isSpeaking)
                       _buildStatusIndicator(
                         icon: Icons.volume_up,
-                        text: 'Reading page... / صفحہ پڑھ رہا ہے...',
+                        text: 'Speaking language options...',
                         color: Colors.blue,
                       ),
-                    
+
                     if (_isListening)
                       _buildStatusIndicator(
                         icon: Icons.mic,
-                        text: 'Listening... / سن رہا ہے...',
+                        text: 'Listening for your choice...',
                         color: Colors.green,
                       ),
-                    
-                    if (!_isSpeaking && !_isListening && selectedLanguage.isEmpty && !_isNavigating)
+
+                    if (!_isSpeaking &&
+                        !_isListening &&
+                        selectedLanguage.isEmpty &&
+                        _pageHasSpoken)
                       Padding(
                         padding: const EdgeInsets.only(top: 20),
                         child: Column(
@@ -637,51 +614,35 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> with 
                               ),
                               textAlign: TextAlign.center,
                             ),
-                            const SizedBox(height: 8),
-                            // Bilingual hint
+                            const SizedBox(height: 10),
                             Text(
-                              'Select a language to continue automatically',
+                              'Say "English" or "Urdu"',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Colors.white.withAlpha((0.5 * 255).round()),
-                              ),
-                            ),
-                            Text(
-                              'خود بخود جاری رکھنے کے لیے ایک زبان منتخب کریں',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.white.withAlpha((0.5 * 255).round()),
+                                color:
+                                    Colors.white.withAlpha((0.6 * 255).round()),
+                                fontStyle: FontStyle.italic,
                               ),
                             ),
                           ],
                         ),
                       ),
-                    
-                    // Voice hint (bilingual)
-                    if (_isListening && selectedLanguage.isEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: Column(
-                          children: [
-                            Text(
-                              'Say: "English" or "Urdu" to select',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.white.withAlpha((0.6 * 255).round()),
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'منتخب کرنے کے لیے کہیں: "انگلش" یا "اردو"',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.white.withAlpha((0.6 * 255).round()),
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-                          ],
-                        ),
+
+                    if (selectedLanguage.isNotEmpty)
+                      Column(
+                        children: [
+                          const SizedBox(height: 20),
+                          _buildStatusIndicator(
+                            icon: Icons.check_circle,
+                            text: '$selectedLanguage selected. Redirecting...',
+                            color: Colors.green,
+                          ),
+                          const SizedBox(height: 20),
+                          const CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Color(0xFF1349EC)),
+                          ),
+                        ],
                       ),
                   ],
                 ),
@@ -729,6 +690,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> with 
 
   @override
   void dispose() {
+    // print('♻️ Disposing LanguageSelectionScreen');
     try {
       VoiceManager.safeStopListening(_speech);
     } catch (_) {}
@@ -740,11 +702,33 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> with 
 
   @override
   Future<void> stopTtsAndListening() async {
+    // print('⏹ Stopping TTS and listening in language page');
     try {
       await VoiceManager.safeStopListening(_speech);
     } catch (_) {}
     try {
       await flutterTts.stop();
     } catch (_) {}
+  }
+
+  // Remove duplicate @override and fix async callback for didPush
+  @override
+  void didPush() {
+    // print('📱 Language page pushed - clearing previous audio');
+    super.didPush();
+
+    if (mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await _clearAllSpeechAndTts();
+        if (mounted) {
+          setState(() {
+            selectedLanguage = "";
+            _isListening = false;
+            _isSpeaking = false;
+            _pageHasSpoken = false;
+          });
+        }
+      });
+    }
   }
 }

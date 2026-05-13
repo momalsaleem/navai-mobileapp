@@ -28,7 +28,8 @@ class UseLocationPage extends StatefulWidget {
   State<UseLocationPage> createState() => _UseLocationPageState();
 }
 
-class _UseLocationPageState extends State<UseLocationPage> with RouteAwareTtsStopper {
+class _UseLocationPageState extends State<UseLocationPage>
+    with RouteAwareTtsStopper {
   final FlutterTts _tts = FlutterTts();
   final stt.SpeechToText _speech = stt.SpeechToText();
   bool _isListening = false;
@@ -54,10 +55,8 @@ class _UseLocationPageState extends State<UseLocationPage> with RouteAwareTtsSto
     // Only initialize and use TTS when voice mode is enabled
     if (isVoiceModeEnabled) {
       await _initTTS();
-      // _speakOptions will also start listening when it finishes
       await _speakOptions();
     } else {
-      // Touch mode: ensure UI reflects no listening
       if (mounted) setState(() => _isListening = false);
     }
   }
@@ -69,7 +68,6 @@ class _UseLocationPageState extends State<UseLocationPage> with RouteAwareTtsSto
     await _tts.awaitSpeakCompletion(true);
   }
 
-  // ✅ Speak instructions and all options clearly
   Future<void> _speakOptions() async {
     final isUrdu = Lang.isUrdu;
     if (isUrdu) {
@@ -82,33 +80,28 @@ class _UseLocationPageState extends State<UseLocationPage> with RouteAwareTtsSto
       await _tts.setLanguage('en-US');
     }
 
-    // Step 1: Introduction
-  await VoiceManager.safeSpeak(_tts, Lang.t('where_are_you'));
-  await VoiceManager.safeAwaitSpeakCompletion(_tts);
+    await VoiceManager.safeSpeak(_tts, Lang.t('where_are_you'));
+    await VoiceManager.safeAwaitSpeakCompletion(_tts);
 
-    // Step 2: Speak each option in order
     for (var option in options) {
-  await VoiceManager.safeSpeak(_tts, '${Lang.t(option['label'])}.');
-  await VoiceManager.safeAwaitSpeakCompletion(_tts);
+      await VoiceManager.safeSpeak(_tts, '${Lang.t(option['label'])}.');
+      await VoiceManager.safeAwaitSpeakCompletion(_tts);
     }
 
-    // Step 3: Final guidance
-  await VoiceManager.safeSpeak(
-    _tts, 'You can say Home, Work, College, or University to select your location.');
-  await VoiceManager.safeAwaitSpeakCompletion(_tts);
+    await VoiceManager.safeSpeak(_tts,
+        'You can say Home, Work, College, or University to select your location.');
+    await VoiceManager.safeAwaitSpeakCompletion(_tts);
 
-    // Step 4: Start voice recognition after speaking all options
     await _startListening();
   }
 
-  // ✅ Start listening continuously for user command
   Future<void> _startListening() async {
     final available = await VoiceManager.safeInitializeSpeech(
       _speech,
       onStatus: (val) {
         if (val == "done" && _isListening) {
           setState(() => _isListening = false);
-          _startListening(); // Keep listening if user pauses
+          _startListening();
         }
       },
       onError: (val) {
@@ -123,7 +116,8 @@ class _UseLocationPageState extends State<UseLocationPage> with RouteAwareTtsSto
         _speech,
         localeId: Lang.speechLocaleId,
         onResult: (result) {
-          String recognized = (result.recognizedWords ?? '').toString().toLowerCase().trim();
+          String recognized =
+              (result.recognizedWords ?? '').toString().toLowerCase().trim();
           if (recognized.isNotEmpty) {
             debugPrint('🎙 Recognized: $recognized');
             _processCommand(recognized);
@@ -133,25 +127,23 @@ class _UseLocationPageState extends State<UseLocationPage> with RouteAwareTtsSto
     }
   }
 
-  // ✅ Interpret recognized voice command
   void _processCommand(String recognized) async {
     int? selectedIndex;
-    
-    // Support both English and Urdu commands
+
     if (recognized.contains('home') || recognized.contains('گھر')) {
       selectedIndex = 0;
     } else if (recognized.contains('work') || recognized.contains('دفتر')) {
       selectedIndex = 1;
     } else if (recognized.contains('college') || recognized.contains('کالج')) {
       selectedIndex = 2;
-    } else if (recognized.contains('university') || recognized.contains('یونیورسٹی')) {
+    } else if (recognized.contains('university') ||
+        recognized.contains('یونیورسٹی')) {
       selectedIndex = 3;
     }
 
     if (selectedIndex != null) {
       _selectLocationAndNavigate(selectedIndex);
     } else if (recognized.length > 2) {
-      // Command not recognized, ask to repeat
       await _askToRepeat();
     }
   }
@@ -165,7 +157,6 @@ class _UseLocationPageState extends State<UseLocationPage> with RouteAwareTtsSto
     }
   }
 
-  // ✅ Speak confirmation and navigate to next page
   Future<void> _selectLocationAndNavigate(int index) async {
     await VoiceManager.safeStopListening(_speech);
     setState(() {
@@ -175,14 +166,13 @@ class _UseLocationPageState extends State<UseLocationPage> with RouteAwareTtsSto
 
     String location = Lang.t(options[index]['label']);
 
-    // Only speak confirmation if voice mode is enabled
     final isVoiceModeEnabled = await PreferencesManager.isVoiceModeEnabled();
     if (isVoiceModeEnabled) {
-      await VoiceManager.safeSpeak(_tts, 'You selected $location. Moving to navigation mode selection.');
+      await VoiceManager.safeSpeak(
+          _tts, 'You selected $location. Moving to navigation mode selection.');
       await VoiceManager.safeAwaitSpeakCompletion(_tts);
     }
 
-    // Ensure any speaking has stopped before navigating away
     try {
       await _tts.stop();
     } catch (_) {}
@@ -226,8 +216,6 @@ class _UseLocationPageState extends State<UseLocationPage> with RouteAwareTtsSto
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 32),
-
-            // Listening indicator
             if (_isListening)
               Container(
                 margin: const EdgeInsets.only(bottom: 16),
@@ -253,8 +241,6 @@ class _UseLocationPageState extends State<UseLocationPage> with RouteAwareTtsSto
                   ],
                 ),
               ),
-
-            // List of options
             Expanded(
               child: ListView.separated(
                 itemCount: options.length,
@@ -312,10 +298,7 @@ class _UseLocationPageState extends State<UseLocationPage> with RouteAwareTtsSto
                 },
               ),
             ),
-
             const SizedBox(height: 24),
-
-            // Continue Button
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF2563eb),
@@ -332,7 +315,8 @@ class _UseLocationPageState extends State<UseLocationPage> with RouteAwareTtsSto
                   : null,
               child: Text(
                 Lang.t('continue'),
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
           ],
@@ -343,7 +327,6 @@ class _UseLocationPageState extends State<UseLocationPage> with RouteAwareTtsSto
 
   @override
   void dispose() {
-    // unsubscribe handled by mixin via super.dispose
     try {
       VoiceManager.safeStopListening(_speech);
     } catch (_) {}

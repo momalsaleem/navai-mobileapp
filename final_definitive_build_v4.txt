@@ -1,0 +1,288 @@
+[ +183 ms] Artifact Instance of 'MaterialFonts' is not required, skipping update.
+[   +2 ms] Artifact Instance of 'GradleWrapper' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidGenSnapshotArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidInternalBuildArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterWebSdk' is not required, skipping update.
+[   +1 ms] Artifact Instance of 'LegacyCanvasKitRemover' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterSdk' is not required, skipping update.
+[  +10 ms] Artifact Instance of 'WindowsEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerDebugSymbols' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FontSubsetArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'PubDependencies' is not required, skipping update.
+[ +104 ms] Artifact Instance of 'AndroidGenSnapshotArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidInternalBuildArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterWebSdk' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterEngineStamp' is not required, skipping update.
+[        ] Artifact Instance of 'LegacyCanvasKitRemover' is not required, skipping update.
+[   +2 ms] Artifact Instance of 'WindowsEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerDebugSymbols' is not required, skipping update.
+[  +53 ms] Artifact Instance of 'MaterialFonts' is not required, skipping update.
+[        ] Artifact Instance of 'GradleWrapper' is not required, skipping update.
+[   +1 ms] Artifact Instance of 'AndroidInternalBuildArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterWebSdk' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterEngineStamp' is not required, skipping update.
+[        ] Artifact Instance of 'LegacyCanvasKitRemover' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterSdk' is not required, skipping update.
+[        ] Artifact Instance of 'WindowsEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerDebugSymbols' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FontSubsetArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'PubDependencies' is not required, skipping update.
+[ +116 ms] executing: [D:\momalp\mobileapp/] D:\src\flutter\bin\cache\dart-sdk\bin\dart pub --suppress-analytics --directory . get --example
+Resolving dependencies...
+Downloading packages...
+  _flutterfire_internals 1.3.67 (1.3.68 available)
+  archive 4.0.7 (4.0.9 available)
+  async 2.13.0 (2.13.1 available)
+  camera 0.11.3 (0.12.0+1 available)
+  camera_android_camerax 0.6.24 (0.7.1+2 available)
+  camera_avfoundation 0.9.22+4 (0.10.1 available)
+  camera_platform_interface 2.11.0 (2.12.0 available)
+  camera_web 0.3.5 (0.3.5+3 available)
+  characters 1.4.0 (1.4.1 available)
+  cross_file 0.3.5 (0.3.5+2 available)
+  crypto 3.0.6 (3.0.7 available)
+  cupertino_icons 1.0.8 (1.0.9 available)
+  ffi 2.1.4 (2.2.0 available)
+  firebase_core 4.5.0 (4.6.0 available)
+  firebase_core_platform_interface 6.0.2 (6.0.3 available)
+  firebase_core_web 3.5.0 (3.5.1 available)
+  firebase_database 12.1.4 (12.2.0 available)
+  firebase_database_platform_interface 0.3.0+3 (0.3.1 available)
+  firebase_database_web 0.2.7+4 (0.2.7+5 available)
+  flutter_lints 2.0.3 (6.0.0 available)
+  flutter_plugin_android_lifecycle 2.0.32 (2.0.34 available)
+  flutter_tts 4.2.3 (4.2.5 available)
+  google_fonts 6.3.2 (8.0.2 available)
+  google_mlkit_commons 0.11.0 (0.11.1 available)
+  google_mlkit_object_detection 0.15.0 (0.15.1 available)
+  http 1.5.0 (1.6.0 available)
+  image 4.7.2 (4.8.0 available)
+  json_annotation 4.9.0 (4.11.0 available)
+  lints 2.1.1 (6.1.0 available)
+  matcher 0.12.17 (0.12.19 available)
+  material_color_utilities 0.11.1 (0.13.0 available)
+  meta 1.16.0 (1.18.2 available)
+  path_provider_android 2.2.19 (2.2.23 available)
+  path_provider_foundation 2.4.2 (2.6.0 available)
+  petitparser 7.0.1 (7.0.2 available)
+  posix 6.0.3 (6.5.0 available)
+  shared_preferences 2.5.3 (2.5.5 available)
+  shared_preferences_android 2.4.15 (2.4.23 available)
+  shared_preferences_foundation 2.5.5 (2.5.6 available)
+  shared_preferences_platform_interface 2.4.1 (2.4.2 available)
+  source_span 1.10.1 (1.10.2 available)
+  test_api 0.7.6 (0.7.11 available)
+  vector_math 2.2.0 (2.3.0 available)
+  vm_service 15.0.0 (15.0.2 available)
+Got dependencies!
+44 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+[+1902 ms] Found plugin speech_to_text at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\speech_to_text-7.3.0\
+[  +10 ms] Found plugin speech_to_text_windows at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\speech_to_text_windows-1.0.0+beta.8\
+[  +13 ms] Found plugin shared_preferences at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences-2.5.3\
+[   +2 ms] Found plugin shared_preferences_windows at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_windows-2.4.1\
+[   +4 ms] Found plugin path_provider_windows at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_windows-2.3.0\
+[  +10 ms] Found plugin shared_preferences_web at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_web-2.4.3\
+[   +2 ms] Found plugin shared_preferences_linux at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_linux-2.4.1\
+[   +3 ms] Found plugin path_provider_linux at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.1\
+[   +5 ms] Found plugin shared_preferences_foundation at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_foundation-2.5.5\
+[   +3 ms] Found plugin shared_preferences_android at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_android-2.4.15\
+[   +4 ms] Found plugin permission_handler at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler-12.0.1\
+[   +3 ms] Found plugin permission_handler_windows at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_windows-0.2.1\
+[   +7 ms] Found plugin permission_handler_html at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_html-0.1.3+5\
+[   +2 ms] Found plugin permission_handler_apple at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_apple-9.4.7\
+[   +2 ms] Found plugin permission_handler_android at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_android-13.0.1\
+[  +26 ms] Found plugin google_mlkit_object_detection at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\google_mlkit_object_detection-0.15.0\
+[   +3 ms] Found plugin google_mlkit_commons at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\google_mlkit_commons-0.11.0\
+[   +5 ms] Found plugin path_provider at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.5\
+[   +3 ms] Found plugin path_provider_foundation at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.4.2\
+[   +3 ms] Found plugin path_provider_android at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.2.19\
+[   +5 ms] Found plugin flutter_vision at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_vision-2.0.0\
+[   +2 ms] Found plugin camera at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\camera-0.11.3\
+[   +1 ms] Found plugin flutter_plugin_android_lifecycle at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_plugin_android_lifecycle-2.0.32\
+[   +1 ms] Found plugin camera_web at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\camera_web-0.3.5\
+[   +7 ms] Found plugin camera_avfoundation at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\camera_avfoundation-0.9.22+4\
+[   +1 ms] Found plugin camera_android_camerax at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\camera_android_camerax-0.6.24\
+[   +1 ms] Found plugin flutter_tts at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_tts-4.2.3\
+[   +2 ms] Found plugin firebase_database at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_database-12.1.4\
+[   +1 ms] Found plugin firebase_database_web at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_database_web-0.2.7+4\
+[   +3 ms] Found plugin firebase_core at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_core-4.5.0\
+[   +2 ms] Found plugin firebase_core_web at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_core_web-3.5.0\
+[   +5 ms] Found plugin android_intent_plus at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\android_intent_plus-6.0.0\
+[  +59 ms] Found plugin speech_to_text at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\speech_to_text-7.3.0\
+[   +2 ms] Found plugin speech_to_text_windows at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\speech_to_text_windows-1.0.0+beta.8\
+[   +7 ms] Found plugin shared_preferences at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences-2.5.3\
+[   +1 ms] Found plugin shared_preferences_windows at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_windows-2.4.1\
+[   +2 ms] Found plugin path_provider_windows at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_windows-2.3.0\
+[   +6 ms] Found plugin shared_preferences_web at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_web-2.4.3\
+[   +1 ms] Found plugin shared_preferences_linux at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_linux-2.4.1\
+[   +1 ms] Found plugin path_provider_linux at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.1\
+[   +3 ms] Found plugin shared_preferences_foundation at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_foundation-2.5.5\
+[   +1 ms] Found plugin shared_preferences_android at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_android-2.4.15\
+[   +1 ms] Found plugin permission_handler at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler-12.0.1\
+[   +1 ms] Found plugin permission_handler_windows at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_windows-0.2.1\
+[   +2 ms] Found plugin permission_handler_html at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_html-0.1.3+5\
+[   +1 ms] Found plugin permission_handler_apple at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_apple-9.4.7\
+[   +1 ms] Found plugin permission_handler_android at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_android-13.0.1\
+[  +10 ms] Found plugin google_mlkit_object_detection at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\google_mlkit_object_detection-0.15.0\
+[   +1 ms] Found plugin google_mlkit_commons at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\google_mlkit_commons-0.11.0\
+[   +2 ms] Found plugin path_provider at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.5\
+[   +1 ms] Found plugin path_provider_foundation at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.4.2\
+[   +1 ms] Found plugin path_provider_android at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.2.19\
+[   +2 ms] Found plugin flutter_vision at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_vision-2.0.0\
+[   +1 ms] Found plugin camera at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\camera-0.11.3\
+[   +1 ms] Found plugin flutter_plugin_android_lifecycle at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_plugin_android_lifecycle-2.0.32\
+[   +1 ms] Found plugin camera_web at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\camera_web-0.3.5\
+[   +4 ms] Found plugin camera_avfoundation at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\camera_avfoundation-0.9.22+4\
+[   +1 ms] Found plugin camera_android_camerax at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\camera_android_camerax-0.6.24\
+[   +1 ms] Found plugin flutter_tts at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_tts-4.2.3\
+[   +1 ms] Found plugin firebase_database at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_database-12.1.4\
+[   +1 ms] Found plugin firebase_database_web at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_database_web-0.2.7+4\
+[   +3 ms] Found plugin firebase_core at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_core-4.5.0\
+[   +1 ms] Found plugin firebase_core_web at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_core_web-3.5.0\
+[   +4 ms] Found plugin android_intent_plus at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\android_intent_plus-6.0.0\
+[  +12 ms] Skipping generating web_plugin_registrant.dart because it is up-to-date.
+[  +30 ms] Found plugin speech_to_text at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\speech_to_text-7.3.0\
+[   +1 ms] Found plugin speech_to_text_windows at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\speech_to_text_windows-1.0.0+beta.8\
+[   +4 ms] Found plugin shared_preferences at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences-2.5.3\
+[   +1 ms] Found plugin shared_preferences_windows at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_windows-2.4.1\
+[   +1 ms] Found plugin path_provider_windows at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_windows-2.3.0\
+[   +3 ms] Found plugin shared_preferences_web at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_web-2.4.3\
+[        ] Found plugin shared_preferences_linux at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_linux-2.4.1\
+[   +1 ms] Found plugin path_provider_linux at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.1\
+[   +2 ms] Found plugin shared_preferences_foundation at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_foundation-2.5.5\
+[   +1 ms] Found plugin shared_preferences_android at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_android-2.4.15\
+[   +1 ms] Found plugin permission_handler at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler-12.0.1\
+[        ] Found plugin permission_handler_windows at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_windows-0.2.1\
+[   +1 ms] Found plugin permission_handler_html at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_html-0.1.3+5\
+[        ] Found plugin permission_handler_apple at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_apple-9.4.7\
+[        ] Found plugin permission_handler_android at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_android-13.0.1\
+[   +6 ms] Found plugin google_mlkit_object_detection at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\google_mlkit_object_detection-0.15.0\
+[   +1 ms] Found plugin google_mlkit_commons at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\google_mlkit_commons-0.11.0\
+[   +1 ms] Found plugin path_provider at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.5\
+[   +1 ms] Found plugin path_provider_foundation at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.4.2\
+[   +1 ms] Found plugin path_provider_android at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.2.19\
+[   +2 ms] Found plugin flutter_vision at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_vision-2.0.0\
+[   +1 ms] Found plugin camera at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\camera-0.11.3\
+[   +1 ms] Found plugin flutter_plugin_android_lifecycle at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_plugin_android_lifecycle-2.0.32\
+[        ] Found plugin camera_web at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\camera_web-0.3.5\
+[   +2 ms] Found plugin camera_avfoundation at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\camera_avfoundation-0.9.22+4\
+[        ] Found plugin camera_android_camerax at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\camera_android_camerax-0.6.24\
+[   +1 ms] Found plugin flutter_tts at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_tts-4.2.3\
+[   +1 ms] Found plugin firebase_database at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_database-12.1.4\
+[   +1 ms] Found plugin firebase_database_web at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_database_web-0.2.7+4\
+[   +2 ms] Found plugin firebase_core at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_core-4.5.0\
+[   +1 ms] Found plugin firebase_core_web at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_core_web-3.5.0\
+[   +3 ms] Found plugin android_intent_plus at C:\Users\SSC\AppData\Local\Pub\Cache\hosted\pub.dev\android_intent_plus-6.0.0\
+[  +10 ms] Generating D:\momalp\mobileapp\android\app\src\main\java\io\flutter\plugins\GeneratedPluginRegistrant.java
+[   +1 ms] Skipping generating GeneratedPluginRegistrant.java because it is up-to-date.
+[   +3 ms] Skipping generating generated_plugin_registrant.h because it is up-to-date.
+[   +1 ms] Skipping generating generated_plugin_registrant.cc because it is up-to-date.
+[   +1 ms] Skipping generating generated_plugins.cmake because it is up-to-date.
+[   +4 ms] Skipping generating generated_plugin_registrant.h because it is up-to-date.
+[   +1 ms] Skipping generating generated_plugin_registrant.cc because it is up-to-date.
+[   +1 ms] Skipping generating generated_plugins.cmake because it is up-to-date.
+[   +2 ms] Skipping generating GeneratedPluginRegistrant.h because it is up-to-date.
+[   +2 ms] Skipping generating GeneratedPluginRegistrant.m because it is up-to-date.
+[   +1 ms] Skipping generating GeneratedPluginRegistrant.swift because it is up-to-date.
+[  +82 ms] executing: C:\Program Files\Android\Android Studio\jbr\bin\java -version
+[  +27 ms] Exit code 1 from: C:\Program Files\Android\Android Studio\jbr\bin\java -version
+[        ] Error: could not open `C:\Program Files\Android\Android Studio\jbr\lib\jvm.cfg'
+[   +9 ms] Top-level Gradle build file not found, skipping migration of task "clean".
+[        ] Android Studio version could not be detected, skipping Gradle-Java version compatibility check.
+[  +15 ms] CMake project not found, skipping support Android 15 16k page size migration.
+[   +4 ms] Using gradle from D:\momalp\mobileapp\android\gradlew.bat.
+[  +51 ms] LocalFile: 'D:\momalp\mobileapp\android\build.gradle.kts' doesn't provide an AGP version. Checking settings.
+[  +14 ms] LocalFile: 'D:\momalp\mobileapp\android\settings.gradle' provides AGP version: 8.1.0
+[  +10 ms] Running Gradle task 'assembleRelease'...
+[   +1 ms] executing: [D:\momalp\mobileapp\android/] D:\momalp\mobileapp\android\gradlew.bat --full-stacktrace --info -Pverbose=true -Ptarget-platform=android-arm,android-arm64,android-x64 -Ptarget=lib\main.dart -Pbase-application-name=android.app.Application -Pdart-defines=RkxVVFRFUl9WRVJTSU9OPTMuMzUuNg==,RkxVVFRFUl9DSEFOTkVMPXN0YWJsZQ==,RkxVVFRFUl9HSVRfVVJMPWh0dHBzOi8vZ2l0aHViLmNvbS9mbHV0dGVyL2ZsdXR0ZXIuZ2l0,RkxVVFRFUl9GUkFNRVdPUktfUkVWSVNJT049OWY0NTVkMjQ4Ng==,RkxVVFRFUl9FTkdJTkVfUkVWSVNJT049ZDI5MTM2MzJhNA==,RkxVVFRFUl9EQVJUX1ZFUlNJT049My45LjI= -Pdart-obfuscation=false -Ptrack-widget-creation=true -Ptree-shake-icons=true assembleRelease
+[ +212 ms] Exception in thread "main" java.io.FileNotFoundException: D:\Android\Gradle \wrapper\dists\gradle-8.7-all\aan3ydargesu18aqyqjwhr3pc\gradle-8.7-all.zip.lck (The system cannot find the path specified)
+[   +1 ms] 	at java.base/java.io.RandomAccessFile.open0(Native Method)
+[        ] 	at java.base/java.io.RandomAccessFile.open(RandomAccessFile.java:344)
+[        ] 	at java.base/java.io.RandomAccessFile.<init>(RandomAccessFile.java:259)
+[        ] 	at java.base/java.io.RandomAccessFile.<init>(RandomAccessFile.java:213)
+[        ] 	at org.gradle.wrapper.ExclusiveFileAccessManager.access(ExclusiveFileAccessManager.java:49)
+[        ] 	at org.gradle.wrapper.Install.createDist(Install.java:48)
+[        ] 	at org.gradle.wrapper.WrapperExecutor.execute(WrapperExecutor.java:128)
+[        ] 	at org.gradle.wrapper.GradleWrapperMain.main(GradleWrapperMain.java:61)
+[  +20 ms] Running Gradle task 'assembleRelease'... (completed in 235ms)
+[   +9 ms] [!] Gradle threw an error while downloading artifacts from the network.
+[        ] Retrying Gradle Build: #1, wait time: 100ms
+[ +152 ms] LocalFile: 'D:\momalp\mobileapp\android\build.gradle.kts' doesn't provide an AGP version. Checking settings.
+[   +1 ms] LocalFile: 'D:\momalp\mobileapp\android\settings.gradle' provides AGP version: 8.1.0
+[  +13 ms] Running Gradle task 'assembleRelease'...
+[        ] executing: [D:\momalp\mobileapp\android/] D:\momalp\mobileapp\android\gradlew.bat --full-stacktrace --info -Pverbose=true -Ptarget-platform=android-arm,android-arm64,android-x64 -Ptarget=lib\main.dart -Pbase-application-name=android.app.Application -Pdart-defines=RkxVVFRFUl9WRVJTSU9OPTMuMzUuNg==,RkxVVFRFUl9DSEFOTkVMPXN0YWJsZQ==,RkxVVFRFUl9HSVRfVVJMPWh0dHBzOi8vZ2l0aHViLmNvbS9mbHV0dGVyL2ZsdXR0ZXIuZ2l0,RkxVVFRFUl9GUkFNRVdPUktfUkVWSVNJT049OWY0NTVkMjQ4Ng==,RkxVVFRFUl9FTkdJTkVfUkVWSVNJT049ZDI5MTM2MzJhNA==,RkxVVFRFUl9EQVJUX1ZFUlNJT049My45LjI= -Pdart-obfuscation=false -Ptrack-widget-creation=true -Ptree-shake-icons=true assembleRelease
+[ +174 ms] Exception in thread "main" java.io.FileNotFoundException: D:\Android\Gradle \wrapper\dists\gradle-8.7-all\aan3ydargesu18aqyqjwhr3pc\gradle-8.7-all.zip.lck (The system cannot find the path specified)
+[        ] 	at java.base/java.io.RandomAccessFile.open0(Native Method)
+[        ] 	at java.base/java.io.RandomAccessFile.open(RandomAccessFile.java:344)
+[        ] 	at java.base/java.io.RandomAccessFile.<init>(RandomAccessFile.java:259)
+[        ] 	at java.base/java.io.RandomAccessFile.<init>(RandomAccessFile.java:213)
+[        ] 	at org.gradle.wrapper.ExclusiveFileAccessManager.access(ExclusiveFileAccessManager.java:49)
+[        ] 	at org.gradle.wrapper.Install.createDist(Install.java:48)
+[        ] 	at org.gradle.wrapper.WrapperExecutor.execute(WrapperExecutor.java:128)
+[        ] 	at org.gradle.wrapper.GradleWrapperMain.main(GradleWrapperMain.java:61)
+[  +33 ms] Running Gradle task 'assembleRelease'... (completed in 209ms)
+[   +8 ms] [!] Gradle threw an error while downloading artifacts from the network.
+[  +43 ms] "flutter apk" took 3,409ms.
+[  +66 ms] Gradle task assembleRelease failed with exit code 1
+[        ] 
+           #0      throwToolExit (package:flutter_tools/src/base/common.dart:34:3)
+           #1      AndroidGradleBuilder.buildGradleApp (package:flutter_tools/src/android/gradle.dart:600:7)
+           <asynchronous suspension>
+           #2      AndroidGradleBuilder.buildApk (package:flutter_tools/src/android/gradle.dart:239:5)
+           <asynchronous suspension>
+           #3      BuildApkCommand.runCommand (package:flutter_tools/src/commands/build_apk.dart:131:5)
+           <asynchronous suspension>
+           #4      FlutterCommand.run.<anonymous closure> (package:flutter_tools/src/runner/flutter_command.dart:1581:27)
+           <asynchronous suspension>
+           #5      AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
+           <asynchronous suspension>
+           #6      CommandRunner.runCommand (package:args/command_runner.dart:212:13)
+           <asynchronous suspension>
+           #7      FlutterCommandRunner.runCommand.<anonymous closure> (package:flutter_tools/src/runner/flutter_command_runner.dart:503:9)
+           <asynchronous suspension>
+           #8      AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
+           <asynchronous suspension>
+           #9      FlutterCommandRunner.runCommand (package:flutter_tools/src/runner/flutter_command_runner.dart:438:5)
+           <asynchronous suspension>
+           #10     run.<anonymous closure>.<anonymous closure> (package:flutter_tools/runner.dart:98:11)
+           <asynchronous suspension>
+           #11     AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
+           <asynchronous suspension>
+           #12     main (package:flutter_tools/executable.dart:101:3)
+           <asynchronous suspension>
+
+
+[        ] Running 1 shutdown hook
+[   +1 ms] Shutdown hooks complete
+[ +168 ms] exiting with code 1

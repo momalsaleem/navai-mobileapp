@@ -1,0 +1,1 @@
+ D:\\momalp\\mobileapp\\.dart_tool\\flutter_build\\56d7f17f22b2d9a4fd8a11f8ad7b2e9d\\native_assets.json: 

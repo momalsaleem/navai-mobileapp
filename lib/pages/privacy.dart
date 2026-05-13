@@ -66,7 +66,8 @@ class _PrivacyPageState extends State<PrivacyPage> {
         _speech,
         localeId: Lang.speechLocaleId,
         onResult: (result) {
-          final recognized = (result.recognizedWords ?? '').toString().toLowerCase().trim();
+          final recognized =
+              (result.recognizedWords ?? '').toString().toLowerCase().trim();
           if (recognized.isNotEmpty) {
             _processCommand(recognized);
           }
@@ -87,13 +88,13 @@ class _PrivacyPageState extends State<PrivacyPage> {
   }
 
   Future<void> _processCommand(String recognized) async {
-    // Example: respond to basic terms – extend as needed
     bool matched = false;
     if (recognized.contains('location') || recognized.contains('لوکیشن')) {
       matched = true;
       await VoiceManager.safeSpeak(_tts, Lang.t('location_services'));
       await VoiceManager.safeAwaitSpeakCompletion(_tts);
-    } else if (recognized.contains('security') || recognized.contains('سیکیورٹی')) {
+    } else if (recognized.contains('security') ||
+        recognized.contains('سیکیورٹی')) {
       matched = true;
       await VoiceManager.safeSpeak(_tts, Lang.t('data_security'));
       await VoiceManager.safeAwaitSpeakCompletion(_tts);
@@ -198,7 +199,8 @@ class _PrivacyPageState extends State<PrivacyPage> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color(0xFF2563eb).withValues(alpha: 64), // 0.25 * 255 ≈ 64
+                color: const Color(0xFF2563eb)
+                    .withValues(alpha: 64), // 0.25 * 255 ≈ 64
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: const Color(0xFF2563eb)),
@@ -221,7 +223,8 @@ class _PrivacyPageState extends State<PrivacyPage> {
                     subtitle,
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.white.withValues(alpha: 153), // 0.6 * 255 ≈ 153
+                      color: Colors.white
+                          .withValues(alpha: 153), // 0.6 * 255 ≈ 153
                     ),
                   ),
                 ],

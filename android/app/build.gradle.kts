@@ -1,8 +1,8 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android")
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    id("org.jetbrains.kotlin.android")
     id("dev.flutter.flutter-gradle-plugin")
+    id("com.google.gms.google-services")
 }
 
 import java.util.Properties
@@ -16,11 +16,9 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.example.nav_aif_fyp"
-    // Set application id/namespace for the released app
     namespace = "com.navai.app"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    compileSdk = 36
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -28,49 +26,31 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        jvmTarget = "17"
     }
 
     defaultConfig {
-        // Application ID - update to your package name
         applicationId = "com.navai.app"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        minSdk = 24
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0"
     }
 
     buildTypes {
         release {
-            // Use release signing config when key properties are provided
-            try {
-                signingConfig = signingConfigs.getByName("release")
-            } catch (e: Exception) {
-                // Fallback to debug signing if release config isn't configured
-                signingConfig = signingConfigs.getByName("debug")
-            }
-        }
-    }
-
-    // Configure release signing only if key.properties exists and the keystore file is present
-    if (keystorePropertiesFile.exists()) {
-        val storeFileProp = keystoreProperties.getProperty("storeFile")
-        if (storeFileProp != null && file(storeFileProp).exists()) {
-            signingConfigs {
-                create("release") {
-                    // keystoreProperties keys: storeFile, storePassword, keyAlias, keyPassword
-                    storeFile = file(storeFileProp)
-                    storePassword = keystoreProperties.getProperty("storePassword")
-                    keyAlias = keystoreProperties.getProperty("keyAlias")
-                    keyPassword = keystoreProperties.getProperty("keyPassword")
-                }
-            }
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 }
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:34.10.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
 }

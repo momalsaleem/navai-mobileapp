@@ -30,6 +30,12 @@ class PreferencesManager {
     return _prefs!.getString(_keyLanguage) ?? 'en';
   }
 
+  /// Check if language has been explicitly set by the user
+  static Future<bool> hasLanguageConfigured() async {
+    await init();
+    return _prefs!.containsKey(_keyLanguage);
+  }
+
   /// Accepts either short codes like 'en'/'ur' or locale IDs like 'en-US'/'ur-PK'.
   /// Internally stores normalized short codes ('en' or 'ur') for compatibility.
   static Future<void> setLanguage(String language) async {
